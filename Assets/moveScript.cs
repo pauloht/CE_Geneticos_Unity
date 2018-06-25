@@ -32,12 +32,13 @@ public class moveScript : MonoBehaviour {
     public bool up = false;
     public bool down = false;
 
+    public bool active = false;
+
     public float fitness;
 	// Use this for initialization
 	void Start () {
         //rb.velocity = new Vector3(10, 0, 0); //mover
         //tf.Rotate(Vector3.forward * 45); rotaciona pra cima
-        Debug.DrawRay(tf.position, tf.TransformDirection(Vector3.right) * 10, Color.red);
     }
 
     public void setValues(individuo indi) {
@@ -85,38 +86,43 @@ public class moveScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-        RaycastHit hit;
-        if (Physics.Raycast(tf.position, tf.TransformDirection(Vector3.right), out hit))
+        if (active)
         {
-            Debug.DrawRay(tf.position, tf.TransformDirection(Vector3.right) * hit.distance, Color.red);
-            //Debug.Log("Hit");
-            hitDistance = hit.distance;
-        }
-        else
-        {
-            Debug.DrawRay(tf.position, tf.TransformDirection(Vector3.right) * 10, Color.red);
-            //Debug.Log("Miss " + hit.distance);
-            hitDistance = 100;
-        }
-        setInput();
-        if (forward)
-        {
-            rb.velocity = tf.TransformDirection(Vector3.right) * 5;
-        }
-        else
-        {
-            rb.velocity = new Vector3(0, 0, 0);
-        }
-        if (up)
-        {
-            tf.Rotate(Vector3.forward * 1); //rotaciona pra cima
-        }
-        else
-        {
-            if (down)
+            //Debug.Log("start");
+            RaycastHit hit;
+            if (Physics.Raycast(tf.position, tf.TransformDirection(Vector3.right), out hit))
             {
-                tf.Rotate(Vector3.forward * -1); //rotaciona pra cima
+                Debug.DrawRay(tf.position, tf.TransformDirection(Vector3.right) * hit.distance, Color.red);
+                //Debug.Log("Hit");
+                hitDistance = hit.distance;
             }
+            else
+            {
+                Debug.DrawRay(tf.position, tf.TransformDirection(Vector3.right) * 10, Color.red);
+                //Debug.Log("Miss " + hit.distance);
+                hitDistance = 100;
+            }
+            setInput();
+            if (forward)
+            {
+                rb.velocity = tf.TransformDirection(Vector3.right) * 5;
+            }
+            else
+            {
+                rb.velocity = new Vector3(0, 0, 0);
+            }
+            if (up)
+            {
+                tf.Rotate(Vector3.forward * 1); //rotaciona pra cima
+            }
+            else
+            {
+                if (down)
+                {
+                    tf.Rotate(Vector3.forward * -1); //rotaciona pra cima
+                }
+            }
+            //Debug.Log("end");
         }
     }
 
