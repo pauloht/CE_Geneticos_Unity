@@ -21,11 +21,14 @@ public class geneticos{
         {
             float x1 = Random.Range(min, max);
             float x2 = Random.Range(min, max);
+            float x3 = Random.Range(min, max);
             float y1 = Random.Range(min, max);
             float y2 = Random.Range(min, max);
+            float y3 = Random.Range(min, max);
             float w1 = Random.Range(min, max);
             float w2 = Random.Range(min, max);
-            lista.Add(new individuo(x1,x2,y1,y2,w1,w2));
+            float w3 = Random.Range(min, max);
+            lista.Add(new individuo(x1,x2,x3,y1,y2,y3,w1,w2,w3));
         }
         Debug.Log("gen size : " + t + "=" + lista.Count);
     }
@@ -33,8 +36,29 @@ public class geneticos{
     private void saveElite()
     {
         lista.Sort();
-        Debug.Log("Maior : " + lista[0]);
-        Debug.Log("Menor : " + lista[lista.Count - 1]);
+        individuo maior = lista[lista.Count - 1];
+        string s = "Maior : " + lista[lista.Count - 1].ToString() + "\n" +
+        "Menor : " + lista[0].ToString() + "\n";
+        if (best == null)
+        {
+            s = s + "BestSoFar: null";
+        }
+        else
+        {
+            s = s + "BestSoFar : " + best.ToString(); 
+        }
+        s = s + "\n";
+        Debug.Log(s);
+        if (best==null || maior.fitness > best.fitness)
+        {
+            best = maior;
+        }
+    }
+
+    private void loadElite(List<individuo> tmp)
+    {
+        tmp.Sort();
+        tmp[0] = new individuo(best);
     }
 
     private List<individuo> selecao()
@@ -47,7 +71,7 @@ public class geneticos{
             individuo tmp = lista[i];
             totalFitness += tmp.fitness;
         }
-        Debug.Log("total fitness : " + totalFitness);
+        //Debug.Log("total fitness : " + totalFitness);
         for (int i = 0; i < tam; i++)
         {
             float rand = Random.Range(0.0f, totalFitness);
@@ -62,7 +86,7 @@ public class geneticos{
                     break;
                 }
             }
-            Debug.Log("Selecionou index " + indexSelecionado);
+            //Debug.Log("Selecionou index " + indexSelecionado);
             tmpLista.Add(lista[indexSelecionado]);
         }
         return (tmpLista);
@@ -92,8 +116,8 @@ public class geneticos{
                 //Debug.Log("id2 : " + id2 + "x1 : " + lista[id2].x1);
                 novo1 = new individuo(lista[id1], lista[id2], percentage);
                 novo2 = new individuo(lista[id1], lista[id2], contraPercentage);
-                Debug.Log(novo1.ToString());
-                Debug.Log(novo2.ToString());
+                //Debug.Log(novo1.ToString());
+                //Debug.Log(novo2.ToString());
             }
             else
             {
@@ -125,12 +149,22 @@ public class geneticos{
             temMutacao = Random.Range(0f, 1f);
             if (temMutacao <= taxaDeMutacao)
             {
+                ind.x3 += Random.Range(-1f, 1f) * 10;
+            }
+            temMutacao = Random.Range(0f, 1f);
+            if (temMutacao <= taxaDeMutacao)
+            {
                 ind.y1 += Random.Range(-1f, 1f) * 10;
             }
             temMutacao = Random.Range(0f, 1f);
             if (temMutacao <= taxaDeMutacao)
             {
                 ind.y2 += Random.Range(-1f, 1f) * 10;
+            }
+            temMutacao = Random.Range(0f, 1f);
+            if (temMutacao <= taxaDeMutacao)
+            {
+                ind.y3 += Random.Range(-1f, 1f) * 10;
             }
             temMutacao = Random.Range(0f, 1f);
             if (temMutacao <= taxaDeMutacao)
@@ -142,15 +176,21 @@ public class geneticos{
             {
                 ind.w2 += Random.Range(-1f, 1f) * 10;
             }
+            temMutacao = Random.Range(0f, 1f);
+            if (temMutacao <= taxaDeMutacao)
+            {
+                ind.w3 += Random.Range(-1f, 1f) * 10;
+            }
         }
     }
 
     public void evoluir()
     {
-        Debug.Log("Evoluindo!");
+        //Debug.Log("Evoluindo!");
         Debug.Log("Entrada : " + this.ToString());
-        //faz nada por enquanto
+        //guarda melhor local se for melhor que melhor global
         saveElite();
+
         //selecao
         List<individuo> tmp = selecao();
 
@@ -160,9 +200,12 @@ public class geneticos{
         //mutacao
         mutacao(tmp);
 
+        //substitui pior local por melhor global
+        //loadElite(tmp);
+        
         lista = tmp;
-        Debug.Log("fim evolucao!");
-        Debug.Log("Saida : " + this.ToString());
+        //Debug.Log("fim evolucao!");
+        //Debug.Log("Saida : " + this.ToString());
     }
 
     public List<individuo> getLista()

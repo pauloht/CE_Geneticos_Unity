@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Manager : MonoBehaviour {
     public GameObject template; // base 'nave' que ira ser feito copias
@@ -9,7 +10,9 @@ public class Manager : MonoBehaviour {
     bool start = false;
 
     List<GameObject> spawnLista;
-    private const int timeToRun = 5;
+    public int timeToRun;
+    public int numeroDeGeracoes;
+    public Text text;
 
     public int tamanhoPop;
     // Use this for initialization
@@ -25,13 +28,13 @@ public class Manager : MonoBehaviour {
             {
                 if (spawnLista[i] == null)
                 {
-                    Debug.Log("Ja foi removido");
+                    //Debug.Log("Ja foi removido");
                 }
                 else
                 {
-                    Debug.Log("Removendo " + spawnLista[i].name);
+                    //Debug.Log("Removendo " + spawnLista[i].name);
                     moveScript naveM = spawnLista[i].GetComponent<moveScript>();
-                    naveM.v.fitness = spawnLista[i].transform.position.x + 1;
+                    naveM.v.fitness = Mathf.Pow(spawnLista[i].transform.position.x,2f) + 1;
                     Destroy(spawnLista[i]);
                 }
                 
@@ -66,8 +69,9 @@ public class Manager : MonoBehaviour {
     IEnumerator manage()
     {
         Debug.Log("StartManage");
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < numeroDeGeracoes; i++)
         {
+            text.text = "Gen " + i;
             spawn();
             yield return new WaitForSeconds(timeToRun);
             despawn();
