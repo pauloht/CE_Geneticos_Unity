@@ -7,23 +7,16 @@ public class moveScript : MonoBehaviour {
     public Rigidbody rb;
     public Transform tf;
 
-    float xMax = 0;
-    float xMin = 0;
+    public individuo v;
 
-    float yMax = 0;
-    float yMin = 0;
+    float xMax = 50f;
+    float xMin = -50f;
 
-    float wMax = 0;
-    float wMin = 0;
+    float yMax = 50f;
+    float yMin = -50f;
 
-    float x1 = 1f; //mul de hitDistance
-    float x2 = 1f; //mul de deg
-
-    float y1 = 1f;
-    float y2 = 1f;
-
-    float w1 = 1f;
-    float w2 = 1f;
+    float wMax = 50f;
+    float wMin = -50f;
 
     private float hitDistance = 0;
     private float angle = 0;
@@ -33,8 +26,6 @@ public class moveScript : MonoBehaviour {
     public bool down = false;
 
     public bool active = false;
-
-    public float fitness;
 	// Use this for initialization
 	void Start () {
         //rb.velocity = new Vector3(10, 0, 0); //mover
@@ -42,17 +33,13 @@ public class moveScript : MonoBehaviour {
     }
 
     public void setValues(individuo indi) {
-        this.x1 = indi.x1;
-        this.x2 = indi.x2;
-        this.y1 = indi.y1;
-        this.y2 = indi.y2;
-        this.w1 = indi.w1;
-        this.w2 = indi.w2;
+        Debug.Log("x1V : " + indi.x1);
+        v = indi;
     }
 
     public void setInput()
     {
-        float shouldForward = x1 * hitDistance + x2 * angle;
+        float shouldForward = v.x1 * hitDistance + v.x2 * angle;
         if (shouldForward <= xMax && shouldForward >= xMin)
         {
             forward = true;
@@ -61,7 +48,7 @@ public class moveScript : MonoBehaviour {
         {
             forward = false;
         }
-        float shouldUp = y1 * hitDistance + y2 * angle;
+        float shouldUp = v.y1 * hitDistance + v.y2 * angle;
         if (shouldUp <= yMax && shouldForward >= yMin)
         {
             up = true;
@@ -70,7 +57,7 @@ public class moveScript : MonoBehaviour {
         {
             up = false;
         }
-        float shouldDown = w1 * hitDistance + w2 * angle;
+        float shouldDown = v.w1 * hitDistance + v.w2 * angle;
         if (shouldDown <= wMax && shouldUp >= wMin)
         {
             down = true;
@@ -132,7 +119,7 @@ public class moveScript : MonoBehaviour {
         Debug.Log("Colidiu com : " + hitName );
         if (hitName.Equals("asteroide")){
             Debug.Log("Destroying");
-            fitness = tf.position.x;
+            v.fitness = tf.position.x + 1;
             Destroy(obj);
         }
     }
